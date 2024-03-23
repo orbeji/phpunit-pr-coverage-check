@@ -9,7 +9,7 @@ interface GitAPIAdapterInterface
     /**
      * @throws GitApiException
      */
-    public function getPullRequestDiff(string $pullRequestId): string;
+    public function getPullRequestDiff(int $pullRequestId): string;
 
     /**
      * @param array<string,array<int>> $modifiedLinesUncovered
@@ -18,7 +18,7 @@ interface GitAPIAdapterInterface
     public function createCoverageComment(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void;
 
     /**
@@ -28,6 +28,6 @@ interface GitAPIAdapterInterface
     public function createCoverageReport(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void;
 }

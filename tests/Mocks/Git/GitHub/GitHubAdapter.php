@@ -24,7 +24,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
     /**
      * @throws GitApiException
      */
-    public function getPullRequestDiff(string $pullRequestId): string
+    public function getPullRequestDiff(int $pullRequestId): string
     {
         $headers = array(
             'Authorization' => 'Bearer ' . $this->bearerToken,
@@ -58,7 +58,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
     public function createCoverageComment(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void {
         $commitId = $this->getPullRequestCommitId($pullRequestId);
         $htmlReport = ReportHelper::createGithubHtmlReport(
@@ -138,7 +138,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
     public function createCoverageReport(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void {
         // For now only in Bitbucket
     }

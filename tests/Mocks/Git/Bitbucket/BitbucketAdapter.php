@@ -10,7 +10,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     {
     }
 
-    public function getPullRequestDiff(string $pullRequestId): string
+    public function getPullRequestDiff(int $pullRequestId): string
     {
         return 'diff --git a/src/Dummy.php b/src/Dummy.php
 index 629c557..e34e94f 100644
@@ -49,7 +49,7 @@ index 629c557..e34e94f 100644
     public function createCoverageComment(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void {
     }
 
@@ -64,7 +64,7 @@ index 629c557..e34e94f 100644
     public function createCoverageReport(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void {
     }
 }

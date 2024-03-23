@@ -99,7 +99,7 @@ class PrCoverageChecker extends Command
         Assert::string($gitConfig);
 
         $pullRequestId = $input->getArgument('pullrequest-id');
-        Assert::string($pullRequestId);
+        Assert::integer($pullRequestId);
 
         $coverageReportPath = $input->getArgument('coverage_report');
         Assert::string($coverageReportPath);
@@ -150,7 +150,7 @@ class PrCoverageChecker extends Command
      * @throws Exception
      */
     private function check(
-        string $pullRequestId,
+        int $pullRequestId,
         string $coverageReport
     ): array {
         $diff = $this->gitService->getPullRequestDiff($pullRequestId);

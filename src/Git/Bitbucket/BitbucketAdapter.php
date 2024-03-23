@@ -34,7 +34,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     /**
      * @throws GitApiException
      */
-    public function getPullRequestDiff(string $pullRequestId): string
+    public function getPullRequestDiff(int $pullRequestId): string
     {
         $headers = array(
             'Authorization' => 'Bearer ' . $this->bearerToken
@@ -67,7 +67,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     public function createCoverageComment(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void {
         $commitId = $this->getCommitIdFromPullRequest($pullRequestId);
         $this->addCoverageComment($coveragePercentage, $modifiedLinesUncovered, $pullRequestId, $commitId);
@@ -76,7 +76,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     /**
      * @throws GitApiException
      */
-    private function getCommitIdFromPullRequest(string $pullRequestId): string
+    private function getCommitIdFromPullRequest(int $pullRequestId): string
     {
         $headers = array(
             'Accept' => 'application/json',
@@ -108,7 +108,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     public function addCoverageComment(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId,
+        int $pullRequestId,
         string $commitId
     ): void {
         $markdownReport = ReportHelper::createMarkdownBitbucketReport(
@@ -124,7 +124,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     /**
      * @throws GitApiException
      */
-    private function commentMarkdownReport(string $pullRequestId, string $markdownReport): void
+    private function commentMarkdownReport(int $pullRequestId, string $markdownReport): void
     {
         $headers = array(
             'Accept' => 'application/json',
@@ -164,7 +164,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     public function createCoverageReport(
         float $coveragePercentage,
         array $modifiedLinesUncovered,
-        string $pullRequestId
+        int $pullRequestId
     ): void {
         $commitId = $this->getCommitIdFromPullRequest($pullRequestId);
         $this->deleteOutdatedCoverageReports($commitId);
