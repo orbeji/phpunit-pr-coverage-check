@@ -1,0 +1,44 @@
+{
+  "name": "orbeji/phpunit-pr-coverage-check",
+  "description": "Check the code coverage of a PR using the clover report of phpunit",
+  "keywords": [
+    "PR",
+    "Pull Request",
+    "Testing",
+    "PHP",
+    "phpunit",
+    "Unittest",
+    "CI",
+    "Code coverage"
+  ],
+  "license": "MIT",
+  "autoload": {
+    "psr-4": { "Orbeji\\PrCoverageChecker\\": "src" }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Orbeji\\PrCoverageChecker\\": "tests"
+    }
+  },
+  "require": {
+    "composer-runtime-api": "^2.2",
+    "php": "^7.1|^8.0|^8.1|^8.2|^8.3",
+    "mashape/unirest-php": "3.*",
+    "ptlis/diff-parser": "^1.1.0|^1.0.2",
+    "symfony/console": "^7.0.4|^5.4.36|^6.4",
+    "symfony/polyfill-uuid": "^1.29.0",
+    "ext-simplexml": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "nyholm/symfony-bundle-test": "^3.0",
+    "phpunit/phpunit": "^10.4.0",
+    "phpstan/phpstan": "^1.10",
+    "symfony/var-dumper": "^7.0",
+    "symfony/framework-bundle": "5.4 || ^6.4 || ^7.0",
+    "squizlabs/php_codesniffer": "^3.8",
+    "webmozart/assert": "^1.11.0"
+  },
+  "bin": ["bin/pr-coverage-check"]
+}
