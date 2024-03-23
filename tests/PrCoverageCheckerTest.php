@@ -58,8 +58,8 @@ class PrCoverageCheckerTest extends KernelTestCase
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => '90',
-                'pullrequest-id' => '1',
+                'percentage' => 90,
+                'pullrequest-id' => 1,
                 '--git_config' => '{"provider":"Bitbucket", "workspace":"orbeji", "repo":"test", "api_token":"fsfowif"}',
                 '--createCoverageReportComment' => true,
                 '--createReport' => true,
@@ -93,8 +93,8 @@ class PrCoverageCheckerTest extends KernelTestCase
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => '40',
-                'pullrequest-id' => '1',
+                'percentage' => 40,
+                'pullrequest-id' => 1,
                 '--git_config' => '{"provider":"Bitbucket", "workspace":"orbeji", "repo":"test", "api_token":"fsfowif"}',
             ]
         );
