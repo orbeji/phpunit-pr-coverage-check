@@ -39,7 +39,7 @@ jobs:
       - name: Composer install
         uses: php-actions/composer@v6
         with:
-          php-version: 7.2
+          php_version: 7.2
 
       - name: PHP Code Sniffer
         uses: php-actions/phpcs@v1
