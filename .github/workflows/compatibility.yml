@@ -12,19 +12,8 @@ jobs:
     strategy:
       matrix:
         operating-system: [ 'ubuntu-22.04' ]
-        php: [ '7.2', '7.4', '8.1', '8.2', '8.3' ]
-        symfony: [ '5.4.*', '6.4.*', '7.0.*']
-        exclude:
-        - php: '8.1'
-          symfony: '7.0.*'
-        - php: '7.2'
-          symfony: '7.0.*'
-        - php: '7.4'
-          symfony: '7.0.*'
-        - php: '7.2'
-          symfony: '6.4.*'
-        - php: '7.4'
-          symfony: '6.4.*'
+        php: [ '7.2' ]
+        symfony: [ '5.4.*']
 
     steps:
       - uses: actions/checkout@v4

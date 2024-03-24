@@ -15,11 +15,11 @@ class Parser
         $parser = new \ptlis\DiffParser\Parser();
         $changeSet = $parser->parse($diff);
         $modifiedLines = [];
-        foreach ($changeSet->files as $file) {
-            foreach ($file->hunks as $hunk) {
-                foreach ($hunk->lines as $line) {
-                    if ($line->operation !== 'unchanged') {
-                        $modifiedLines[$file->newFilename][] = $line->newLineNo;
+        foreach ($changeSet->getFiles() as $file) {
+            foreach ($file->getHunks() as $hunk) {
+                foreach ($hunk->getLines() as $line) {
+                    if ($line->getOperation() !== 'unchanged') {
+                        $modifiedLines[$file->getNewFilename()][] = $line->getNewLineNo();
                     }
                 }
             }

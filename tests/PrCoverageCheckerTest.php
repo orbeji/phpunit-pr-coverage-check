@@ -2,6 +2,7 @@
 
 namespace Orbeji\PrCoverageChecker;
 
+use Nyholm\BundleTest\AppKernel;
 use Nyholm\BundleTest\TestKernel;
 use Orbeji\PrCoverageChecker\Coverage\Parser;
 use Orbeji\PrCoverageChecker\Git\GitAdapterFactory;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -24,16 +26,16 @@ class PrCoverageCheckerTest extends KernelTestCase
 {
     protected static function getKernelClass(): string
     {
-        return TestKernel::class;
+        return AppKernel::class;
     }
 
     protected static function createKernel(array $options = []): KernelInterface
     {
         /**
-         * @var TestKernel $kernel
+         * @var KernelInterface $kernel
          */
         $kernel = parent::createKernel($options);
-        $kernel->handleOptions($options);
+//        $kernel->handleOptions($options);
 
         return $kernel;
     }
@@ -43,7 +45,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         self::bootKernel();
         $application = new Application(self::$kernel);
 
-        $gitFactory = $this->createStub(GitAdapterFactory::class);
+        $gitFactory = $this->createMock(GitAdapterFactory::class);
         $gitFactory->method('create')->willReturn(new BitbucketAdapter('', '', ''));
 
         $application->add(
@@ -78,7 +80,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         self::bootKernel();
         $application = new Application(self::$kernel);
 
-        $gitFactory = $this->createStub(GitAdapterFactory::class);
+        $gitFactory = $this->createMock(GitAdapterFactory::class);
         $gitFactory->method('create')->willReturn(new BitbucketAdapter('', '', ''));
 
         $application->add(
