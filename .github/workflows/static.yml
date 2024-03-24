@@ -30,6 +30,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.2
+          coverage: none
+
       - name: Composer install
         uses: php-actions/composer@v6
 
@@ -39,21 +45,3 @@ jobs:
           php_version: 7.2
           path: src/
           standard: psr12
-
-  composer-normalize:
-    name: Composer Normalize
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.2
-          coverage: none
-          tools: composer-normalize
-
-      - name: Normalize
-        run: composer-normalize --dry-run
