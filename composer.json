@@ -20,6 +20,7 @@
     "mashape/unirest-php": "^3.0",
     "ptlis/diff-parser": "^1.0.2",
     "symfony/console": "^5.4.36 || ^6.4 || ^7.0.4",
+    "symfony/polyfill-php83": "*",
     "symfony/polyfill-uuid": "^1.29.0"
   },
   "require-dev": {

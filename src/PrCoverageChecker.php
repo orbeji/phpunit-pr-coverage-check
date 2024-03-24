@@ -64,11 +64,7 @@ class PrCoverageChecker extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Needed configuration to access the git repository through the APIs',
-                json_encode([]),
-                [
-                    '"provider:"Bitbucket", "workspace":"orbeji", "repo":"pr-coverage-check", "api_token":"bearer"}',
-                    '"provider:"Github", "owner":"orbeji", "repo":"pr-coverage-check", "api_token":"bearer"}',
-                ]
+                json_encode([])
             )
             ->addOption(
                 'createCoverageReportComment',
