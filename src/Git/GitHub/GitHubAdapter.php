@@ -17,16 +17,16 @@ class GitHubAdapter implements GitAPIAdapterInterface
     /**
      * @var string
      */
-    private $repo;
+    private $repository;
     /**
      * @var string
      */
     private $bearerToken;
 
-    public function __construct(string $owner, string $repo, string $bearerToken)
+    public function __construct(string $owner, string $repository, string $bearerToken)
     {
         $this->owner = $owner;
-        $this->repo = $repo;
+        $this->repository = $repository;
         $this->bearerToken = $bearerToken;
     }
 
@@ -44,7 +44,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.github.com/repos/%s/%s/pulls/%s',
             $this->owner,
-            $this->repo,
+            $this->repository,
             $pullRequestId
         );
 
@@ -76,7 +76,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
             $modifiedLinesUncovered,
             $commitId,
             $this->owner,
-            $this->repo
+            $this->repository
         );
         $this->commentHtmlReport($pullRequestId, $htmlReport);
     }
@@ -95,7 +95,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.github.com/repos/%s/%s/pulls/%s',
             $this->owner,
-            $this->repo,
+            $this->repository,
             $pullRequestId
         );
 
@@ -127,7 +127,7 @@ class GitHubAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.github.com/repos/%s/%s/issues/%s/comments',
             $this->owner,
-            $this->repo,
+            $this->repository,
             $pullRequestId
         );
 
@@ -162,6 +162,6 @@ class GitHubAdapter implements GitAPIAdapterInterface
                 $message = $error['message'] ?? '';
             }
         }
-        return $message;
+        return '(' . $response->code . ') ' . $message;
     }
 }

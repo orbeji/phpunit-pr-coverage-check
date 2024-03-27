@@ -2,6 +2,12 @@
 
 namespace Orbeji\PrCoverageChecker;
 
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableCellStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
 class ReportHelper
 {
     /**
@@ -79,5 +85,24 @@ class ReportHelper
             $report .= '|' . PHP_EOL;
         }
         return $report;
+    }
+
+    public static function createAnsiReport(
+        InputInterface $input,
+        OutputInterface $output,
+        array $modifiedLinesUncovered
+    ): void {
+        $symfonyStyle = new SymfonyStyle($input, $output);
+        $rows = [];
+        foreach ($modifiedLinesUncovered as $file => $lines) {
+            $rows[] = [
+                new TableCell($file),
+                new TableCell(implode(', ', $lines)),
+            ];
+        }
+        $symfonyStyle->table(
+            ['File', 'Lines'],
+            $rows
+        );
     }
 }

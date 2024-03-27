@@ -18,16 +18,16 @@ class BitbucketAdapter implements GitAPIAdapterInterface
     /**
      * @var string
      */
-    private $repo;
+    private $repository;
     /**
      * @var string
      */
     private $bearerToken;
 
-    public function __construct(string $workspace, string $repo, string $bearerToken)
+    public function __construct(string $workspace, string $repository, string $bearerToken)
     {
         $this->workspace = $workspace;
-        $this->repo = $repo;
+        $this->repository = $repository;
         $this->bearerToken = $bearerToken;
     }
 
@@ -43,7 +43,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/pullrequests/%s/diff',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $pullRequestId
         );
 
@@ -85,7 +85,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/pullrequests/%s',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $pullRequestId
         );
         $response = Request::get(
@@ -116,7 +116,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
             $modifiedLinesUncovered,
             $commitId,
             $this->workspace,
-            $this->repo
+            $this->repository
         );
         $this->commentMarkdownReport($pullRequestId, $markdownReport);
     }
@@ -141,7 +141,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/pullrequests/%s/comments',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $pullRequestId
         );
 
@@ -151,7 +151,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
             json_encode($body)
         );
 
-        if ($response->code !== 200) {
+        if ($response->code !== 201) {
             $message = $this->getErrorMessage($response);
             throw new GitApiException($message);
         }
@@ -212,7 +212,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/commit/%s/reports',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $commitId
         );
         $response = Request::get(
@@ -242,7 +242,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/commit/%s/reports/%s',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $commitId,
             $coverageReport->external_id
         );
@@ -288,7 +288,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/commit/%s/reports/%s',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $commitId,
             $idReport
         );
@@ -336,7 +336,7 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $url = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s/commit/%s/reports/%s/annotations',
             $this->workspace,
-            $this->repo,
+            $this->repository,
             $commitId,
             $idReport
         );
@@ -358,10 +358,10 @@ class BitbucketAdapter implements GitAPIAdapterInterface
         $message = 'API error';
         if (json_validate($response->raw_body)) {
             $error = json_decode($response->raw_body, true);
-            if (is_array($error) && array_key_exists('error', $error)) {
-                $message = $error['error']['message'] ?? '';
+            if (is_array($error)) {
+                $message = $error['message'] ?? $error['error']['message'] ?? '';
             }
         }
-        return $message;
+        return '(' . $response->code . ') ' . $message;
     }
 }

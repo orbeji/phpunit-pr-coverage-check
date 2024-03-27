@@ -3,24 +3,17 @@
 namespace Orbeji\PrCoverageChecker;
 
 use Nyholm\BundleTest\AppKernel;
-use Nyholm\BundleTest\TestKernel;
 use Orbeji\PrCoverageChecker\Coverage\Parser;
 use Orbeji\PrCoverageChecker\Git\GitAdapterFactory;
 use Orbeji\PrCoverageChecker\Mocks\Git\Bitbucket\BitbucketAdapter;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Prevent setting the class alias for all test suites
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class PrCoverageCheckerTest extends KernelTestCase
 {
@@ -31,16 +24,48 @@ class PrCoverageCheckerTest extends KernelTestCase
 
     protected static function createKernel(array $options = []): KernelInterface
     {
-        /**
-         * @var KernelInterface $kernel
-         */
-        $kernel = parent::createKernel($options);
-//        $kernel->handleOptions($options);
-
-        return $kernel;
+        return parent::createKernel($options);
     }
 
-    public function testcommand(): void
+
+    public function testCommandDiffFile(): void
+    {
+        self::bootKernel();
+        $application = new Application(self::$kernel);
+
+        $application->add(
+            new PrCoverageChecker(
+                new Parser(),
+                new GitAdapterFactory()
+            )
+        );
+
+        $command = $application->find('check');
+        $commandTester = new CommandTester($command);
+        $status = $commandTester->execute(
+            [
+                'coverage_report' => __DIR__ . '/clover.xml',
+                'percentage' => 90,
+                '--diff' => __DIR__ . '/diff.txt',
+                '--report' => 'ansi',
+            ]
+        );
+
+        $this->assertEquals(Command::FAILURE, $status);
+
+        // the output of the command in the console
+        $output = $commandTester->getDisplay();
+        $this->assertEquals("40
+ --------------- ------------ 
+  File            Lines       
+ --------------- ------------ 
+  src/Dummy.php   19, 20, 26  
+ --------------- ------------ 
+
+", $output);
+    }
+
+    public function testCommand(): void
     {
         self::bootKernel();
         $application = new Application(self::$kernel);
@@ -55,16 +80,18 @@ class PrCoverageCheckerTest extends KernelTestCase
             )
         );
 
-        $command = $application->find('orbeji:pr-coverage-check');
+        $command = $application->find('check');
         $commandTester = new CommandTester($command);
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
                 'percentage' => 90,
-                'pullrequest-id' => 1,
-                '--git_config' => '{"provider":"Bitbucket", "workspace":"orbeji", "repo":"test", "api_token":"fsfowif"}',
-                '--createCoverageReportComment' => true,
-                '--createReport' => true,
+                '--pullrequest-id' => 1,
+                '--provider' => 'Bitbucket',
+                '--workspace' => 'orbeji',
+                '--repository' => 'test',
+                '--api_token' => 'fsfowif',
+                '--report' => 'Comment',
             ]
         );
 
@@ -90,14 +117,18 @@ class PrCoverageCheckerTest extends KernelTestCase
             )
         );
 
-        $command = $application->find('orbeji:pr-coverage-check');
+        $command = $application->find('check');
         $commandTester = new CommandTester($command);
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
                 'percentage' => 40,
-                'pullrequest-id' => 1,
-                '--git_config' => '{"provider":"Bitbucket", "workspace":"orbeji", "repo":"test", "api_token":"fsfowif"}',
+                '--pullrequest-id' => 1,
+                '--provider' => 'Bitbucket',
+                '--workspace' => 'orbeji',
+                '--repository' => 'test',
+                '--api_token' => 'fsfowif',
+                '--report' => 'Comment',
             ]
         );
 
