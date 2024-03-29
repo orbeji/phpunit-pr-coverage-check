@@ -1,3 +1,0 @@
-git diff main...feature/testpr
-
-git diff ${BITBUCKET_PR_DESTINATION_BRANCH}...${BITBUCKET_BRANCH} > diff.txt

@@ -133,6 +133,9 @@ class PrCoverageChecker extends Command
             $this->gitService = $this->gitAdapterFactory->create($provider, $workspace, $repository, $apiToken);
         }
 
+        if (!file_exists($coverageReportPath)) {
+            throw new InvalidArgumentException('Files does not exist: ' . $coverageReportPath);
+        }
         $coverageReport = file_get_contents($coverageReportPath);
         if ($coverageReport === false) {
             throw new InvalidArgumentException('Cannot read file: ' . $coverageReportPath);
@@ -142,9 +145,10 @@ class PrCoverageChecker extends Command
         [$coveragePercentage, $modifiedLinesUncovered] = $this->check($coverageReport, $pullRequestDiff);
 
         if ($coveragePercentage < $expectedPercentage) {
-            $output->writeln((string)$coveragePercentage);
-            if ($input->hasOption('report')) {
+            if ($input->getOption('report')) {
                 $this->createReport($isDiffFileFlow, $coveragePercentage, $modifiedLinesUncovered, $input, $output);
+            } else {
+                $output->writeln('Coverage: <error>' . $coveragePercentage . '%</error>');
             }
             return Command::FAILURE;
         }
@@ -154,12 +158,12 @@ class PrCoverageChecker extends Command
 
     private function checkDiffFileOrAPI(InputInterface $input): void
     {
-        if (!$input->hasOption('diff') &&
-            !(
-                $input->hasOption('provider') ||
-                $input->hasOption('workspace') ||
-                $input->hasOption('repository') ||
-                $input->hasOption('api_token')
+        if (!$input->getOption('diff') &&
+            (
+                !$input->getOption('provider') ||
+                !$input->getOption('workspace') ||
+                !$input->getOption('repository') ||
+                !$input->getOption('api_token')
             )
         ) {
             throw new InvalidArgumentException(
@@ -176,6 +180,9 @@ class PrCoverageChecker extends Command
     {
         if ($isDiffFileFlow) {
             $diffPath = $input->getOption('diff');
+            if (!file_exists($diffPath)) {
+                throw new InvalidArgumentException('Files does not exist: ' . $diffPath);
+            }
             $diff = file_get_contents($diffPath);
             if ($diff === false) {
                 throw new InvalidArgumentException('Cannot read file diff file');
@@ -228,8 +235,8 @@ class PrCoverageChecker extends Command
         $report = $input->getOption('report');
         Assert::string($report);
 
-        if ($isDiffFileFlow && $report === 'ansi') {
-            ReportHelper::createAnsiReport($input, $output, $modifiedLinesUncovered);
+        if ($report === 'ansi') {
+            ReportHelper::createAnsiReport($input, $output, $coveragePercentage, $modifiedLinesUncovered);
         }
         if (!$isDiffFileFlow) {
             $pullRequestId = $input->getOption('pullrequest-id');

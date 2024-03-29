@@ -90,8 +90,10 @@ class ReportHelper
     public static function createAnsiReport(
         InputInterface $input,
         OutputInterface $output,
+        float $coveragePercentage,
         array $modifiedLinesUncovered
     ): void {
+        $output->writeln('Coverage: <error>' . $coveragePercentage . '%</error>');
         $symfonyStyle = new SymfonyStyle($input, $output);
         $rows = [];
         foreach ($modifiedLinesUncovered as $file => $lines) {
@@ -101,7 +103,7 @@ class ReportHelper
             ];
         }
         $symfonyStyle->table(
-            ['File', 'Lines'],
+            ['File', 'Uncovered Lines'],
             $rows
         );
     }
