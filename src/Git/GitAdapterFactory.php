@@ -15,8 +15,12 @@ class GitAdapterFactory
      * @param string $apiToken
      * @return GitAPIAdapterInterface
      */
-    public function create(string $provider, string $workspace, string $repository, string $apiToken): GitAPIAdapterInterface
-    {
+    public function create(
+        string $provider,
+        string $workspace,
+        string $repository,
+        string $apiToken
+    ): GitAPIAdapterInterface {
         switch ($provider) {
             case 'Bitbucket':
                 return new BitbucketAdapter($workspace, $repository, $apiToken);

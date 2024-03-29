@@ -87,6 +87,9 @@ class ReportHelper
         return $report;
     }
 
+    /**
+     * @param array<string,array<int>> $modifiedLinesUncovered
+     */
     public static function createAnsiReport(
         InputInterface $input,
         OutputInterface $output,

@@ -112,11 +112,11 @@ class PrCoverageChecker extends Command
         Assert::string($coverageReportPath);
 
         $expectedPercentage = $input->getArgument('percentage');
-        Assert::integer((int)$expectedPercentage);
+        Assert::integer($expectedPercentage);
 
         $this->checkDiffFileOrAPI($input);
 
-        $isDiffFileFlow =$input->getOption('diff') !== null;
+        $isDiffFileFlow = $input->getOption('diff') !== null;
         if (!$isDiffFileFlow) {
             $provider = $input->getOption('provider');
             Assert::string($provider);
@@ -158,7 +158,8 @@ class PrCoverageChecker extends Command
 
     private function checkDiffFileOrAPI(InputInterface $input): void
     {
-        if (!$input->getOption('diff') &&
+        if (
+            !$input->getOption('diff') &&
             (
                 !$input->getOption('provider') ||
                 !$input->getOption('workspace') ||
@@ -180,6 +181,7 @@ class PrCoverageChecker extends Command
     {
         if ($isDiffFileFlow) {
             $diffPath = $input->getOption('diff');
+            Assert::string($diffPath);
             if (!file_exists($diffPath)) {
                 throw new InvalidArgumentException('Files does not exist: ' . $diffPath);
             }
@@ -191,7 +193,7 @@ class PrCoverageChecker extends Command
         }
 
         $pullRequestId = $input->getOption('pullrequest-id');
-        Assert::integer((int)$pullRequestId);
+        Assert::integer($pullRequestId);
         return $this->gitService->getPullRequestDiff($pullRequestId);
     }
 
@@ -217,12 +219,7 @@ class PrCoverageChecker extends Command
     }
 
     /**
-     * @param bool $isDiffFileFlow
-     * @param float $coveragePercentage
-     * @param array $modifiedLinesUncovered
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return void
+     * @param array<string,array<int>> $modifiedLinesUncovered
      * @throws GitApiException
      */
     public function createReport(
@@ -240,6 +237,7 @@ class PrCoverageChecker extends Command
         }
         if (!$isDiffFileFlow) {
             $pullRequestId = $input->getOption('pullrequest-id');
+            Assert::integer($pullRequestId);
             if ($report === 'comment') {
                 $this->gitService->createCoverageComment($coveragePercentage, $modifiedLinesUncovered, $pullRequestId);
             }
