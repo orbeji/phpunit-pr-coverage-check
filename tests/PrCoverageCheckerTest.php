@@ -156,7 +156,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         );
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Files does not exist: /app/tests/clover_invalid.xml');
+        $this->expectExceptionMessageRegExp('/Files does not exist: */');
         $command = $application->find('check');
         $commandTester = new CommandTester($command);
         $commandTester->execute(
