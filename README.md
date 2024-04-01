@@ -67,7 +67,7 @@ vendor/bin/pr-coverage-check check clover.xml 100 --diff=diff.txt
 GitHub
 ```bash
 vendor/bin/phpunit --coverage-clover clover.xml
-git diff ${BITBUCKET_PR_DESTINATION_BRANCH}...${BITBUCKET_BRANCH} > diff.txt
+git diff ${GITHUB_BASE_REF}...${GITHUB_REF_NAME} > diff.txt
 vendor/bin/pr-coverage-check check clover.xml 100 --diff=diff.txt
 ```
 Git repo information
