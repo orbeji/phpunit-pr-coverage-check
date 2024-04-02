@@ -112,7 +112,6 @@ class PrCoverageChecker extends Command
         Assert::string($coverageReportPath);
 
         $expectedPercentage = $input->getArgument('percentage');
-        Assert::integer((int)$expectedPercentage);
 
         $this->checkDiffFileOrAPI($input);
 
