@@ -112,6 +112,7 @@ class PrCoverageChecker extends Command
         Assert::string($coverageReportPath);
 
         $expectedPercentage = $input->getArgument('percentage');
+        Assert::integer($expectedPercentage);
 
         $this->checkDiffFileOrAPI($input);
 
@@ -143,7 +144,7 @@ class PrCoverageChecker extends Command
         $pullRequestDiff = $this->getPullRequestDiff($input, $isDiffFileFlow);
         [$coveragePercentage, $modifiedLinesUncovered] = $this->check($coverageReport, $pullRequestDiff);
 
-        if ($coveragePercentage < $expectedPercentage) {
+        if ($coveragePercentage < (int)$expectedPercentage) {
             if ($input->getOption('report')) {
                 $this->createReport($isDiffFileFlow, $coveragePercentage, $modifiedLinesUncovered, $input, $output);
             } else {
