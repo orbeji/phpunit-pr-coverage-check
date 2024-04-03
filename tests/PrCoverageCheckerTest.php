@@ -46,7 +46,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => 90,
+                'percentage' => '90',
                 '--diff' => __DIR__ . '/diff.txt',
                 '--report' => 'ansi',
             ]
@@ -86,7 +86,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => 90,
+                'percentage' => '90',
                 '--pullrequest-id' => 1,
                 '--provider' => 'Bitbucket',
                 '--workspace' => 'orbeji',
@@ -123,7 +123,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => 90,
+                'percentage' => '90',
                 '--pullrequest-id' => 1,
                 '--provider' => 'Bitbucket',
                 '--workspace' => 'orbeji',
@@ -162,7 +162,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover_invalid.xml',
-                'percentage' => 90,
+                'percentage' => '90',
                 '--pullrequest-id' => 1,
                 '--provider' => 'Bitbucket',
                 '--workspace' => 'orbeji',
@@ -193,7 +193,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         $status = $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => 40,
+                'percentage' => '40',
                 '--pullrequest-id' => 1,
                 '--provider' => 'Bitbucket',
                 '--workspace' => 'orbeji',
@@ -232,7 +232,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         $commandTester->execute(
             [
                 'coverage_report' => __DIR__ . '/clover.xml',
-                'percentage' => 40,
+                'percentage' => '40',
                 '--report' => 'comment',
             ]
         );

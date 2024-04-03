@@ -113,7 +113,7 @@ class PrCoverageChecker extends Command
 
         $expectedPercentage = $input->getArgument('percentage');
         if (!ctype_digit($expectedPercentage)) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('Expected integer');
         }
         $expectedPercentage = (int)$expectedPercentage;
 
