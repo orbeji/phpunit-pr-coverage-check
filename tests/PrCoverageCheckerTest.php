@@ -66,6 +66,43 @@ class PrCoverageCheckerTest extends KernelTestCase
 ", $output);
     }
 
+    public function testCommandDiffFileDummy(): void
+    {
+        self::bootKernel();
+        $application = new Application(self::$kernel);
+
+        $application->add(
+            new PrCoverageChecker(
+                new Parser(),
+                new GitAdapterFactory()
+            )
+        );
+
+        $command = $application->find('check');
+        $commandTester = new CommandTester($command);
+        $status = $commandTester->execute(
+            [
+                'coverage_report' => __DIR__ . '/files/clover.xml',
+                'percentage' => '90',
+                '--diff' => __DIR__ . '/files/diff.txt',
+                '--report' => 'ansi',
+            ]
+        );
+
+        $this->assertEquals(Command::FAILURE, $status);
+
+        // the output of the command in the console
+        $output = $commandTester->getDisplay();
+        $this->assertEquals("Coverage: 0%
+ --------------- ----------------- 
+  File            Uncovered Lines  
+ --------------- ----------------- 
+  src/Dummy.php   11, 12, 13       
+ --------------- ----------------- 
+
+", $output);
+    }
+
     public function testCommand(): void
     {
         self::bootKernel();

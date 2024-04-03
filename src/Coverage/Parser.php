@@ -16,10 +16,12 @@ class Parser
         $changeSet = $parser->parse($diff);
         $modifiedLines = [];
         foreach ($changeSet->getFiles() as $file) {
-            foreach ($file->getHunks() as $hunk) {
-                foreach ($hunk->getLines() as $line) {
-                    if ($line->getOperation() !== 'unchanged') {
-                        $modifiedLines[$file->getNewFilename()][] = $line->getNewLineNo();
+            if (str_ends_with($file->getNewFilename(), '.php')) {
+                foreach ($file->getHunks() as $hunk) {
+                    foreach ($hunk->getLines() as $line) {
+                        if ($line->getOperation() !== 'unchanged') {
+                            $modifiedLines[$file->getNewFilename()][] = $line->getNewLineNo();
+                        }
                     }
                 }
             }
@@ -37,7 +39,8 @@ class Parser
         $coveredLines = [];
         $coverage = new SimpleXMLElement($coverageReport);
         $projectXMLElement = $coverage->project;
-        foreach ($projectXMLElement->file as $file) {
+        $files = $projectXMLElement->package->file ?? $projectXMLElement->file;
+        foreach ($files as $file) {
             $filename = $this->parseName((string)$file['name']);
             foreach ($file->line as $line) {
                 if ((int)$line['count'] === 0) {
