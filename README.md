@@ -60,9 +60,9 @@ the current and destination branches.
 Diff file example:
 Bitbucket
 ```bash
-vendor/bin/phpunit --coverage-clover clover.xml
-git diff ${BITBUCKET_PR_DESTINATION_BRANCH}...${BITBUCKET_BRANCH} > diff.txt
-vendor/bin/pr-coverage-check check clover.xml 100 --diff=diff.txt
+vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite pipelines --coverage-clover 'clover.xml'
+git diff origin/${BITBUCKET_PR_DESTINATION_BRANCH}...origin/${BITBUCKET_BRANCH} > diff.txt
+vendor/bin/pr-coverage-check check clover.xml 100 --diff=diff.txt --report=ansi
 ```
 GitHub
 ```bash
@@ -109,14 +109,60 @@ report:
 
 ### CI Integration
 #### Bitbucket Pipelines
+```yaml
+pipelines:
+  pull-requests:
+      feature/*:
+        - step:
+            name: phpunit coverage check
+            image:
+              name: orbeji/base:7.2-xdebug-cli
+            script:
+              - composer install
+              - vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite pipelines --coverage-clover 'clover.xml'
+              - git diff origin/${BITBUCKET_PR_DESTINATION_BRANCH}...origin/${BITBUCKET_BRANCH} > diff.txt
+              - vendor/bin/pr-coverage-check check clover.xml 100 --diff=diff.txt --report=ansi
+            caches:
+              - composer
+```
 #### GitHub Actions
+```yaml
+name: PHPUnit and Coverage Check
 
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.2'
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Run PHPUnit with coverage
+      run: vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite pipelines --coverage-clover 'clover.xml'
+
+    - name: Git diff
+      run: git fetch && git diff origin/${GITHUB_BASE_REF}...origin/${GITHUB_HEAD_REF} > diff.txt
+
+    - name: PR Coverage Check
+      run: vendor/bin/pr-coverage-check check clover.xml 100 --diff=diff.txt --report=ansi
+
+```
 
 <!-- ROADMAP -->
 ## Roadmap
 
 - [ ] Add Bitbucket report example screenshot
-- [ ] Add examples of CI for Bitbucket and GitHub 
+- [x] Add examples of CI for Bitbucket and GitHub 
 
 
 See the [open issues](https://github.com/orbeji/phpunit-pr-coverage-check/issues) for a full list of proposed features (and known issues).
