@@ -35,11 +35,41 @@ class Parser
      */
     public function getCoverageLines(string $coverageReport): array
     {
-        $uncoveredLines = [];
-        $coveredLines = [];
         $coverage = new SimpleXMLElement($coverageReport);
         $projectXMLElement = $coverage->project;
-        $files = $projectXMLElement->package->file ?? $projectXMLElement->file;
+        $hasPackage = $projectXMLElement->package;
+        if ($hasPackage) {
+            [$uncoveredLines, $coveredLines] = $this->getPackageLines($projectXMLElement);
+        } else {
+            [$uncoveredLines, $coveredLines] = $this->getFileLines($projectXMLElement->file);
+        }
+        return [$uncoveredLines, $coveredLines];
+    }
+
+    /**
+     * @return array<int, array<string, array<int, int>>>
+     */
+    private function getPackageLines(SimpleXMLElement $project): array
+    {
+        $uncoveredLines = [];
+        $coveredLines = [];
+        foreach ($project->package as $package) {
+            [$uncoveredLinesResult, $coveredLinesResult] = $this->getFileLines($package->file);
+            $uncoveredLines[] = $uncoveredLinesResult;
+            $coveredLines[] = $coveredLinesResult;
+        }
+        $uncoveredLines = array_merge([], ...$uncoveredLines);
+        $coveredLines = array_merge([], ...$coveredLines);
+        return [$uncoveredLines, $coveredLines];
+    }
+
+    /**
+     * @return array<int, array<string, array<int, int>>>
+     */
+    private function getFileLines(SimpleXMLElement $files): array
+    {
+        $uncoveredLines = [];
+        $coveredLines = [];
         foreach ($files as $file) {
             $filename = $this->parseName((string)$file['name']);
             foreach ($file->line as $line) {
@@ -50,8 +80,7 @@ class Parser
                 }
             }
         }
-
-        return [$uncoveredLines, $coveredLines];
+        return array($uncoveredLines, $coveredLines);
     }
 
     private function parseName(string $fileName): string
