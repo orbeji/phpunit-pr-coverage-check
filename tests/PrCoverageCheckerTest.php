@@ -3,7 +3,7 @@
 namespace Orbeji\PrCoverageChecker;
 
 use InvalidArgumentException;
-use Nyholm\BundleTest\AppKernel;
+use Nyholm\BundleTest\TestKernel;
 use Orbeji\PrCoverageChecker\Coverage\Parser;
 use Orbeji\PrCoverageChecker\Git\GitAdapterFactory;
 use Orbeji\PrCoverageChecker\Mocks\Git\Bitbucket\BitbucketAdapter;
@@ -20,14 +20,14 @@ class PrCoverageCheckerTest extends KernelTestCase
 {
     protected static function getKernelClass(): string
     {
-        return AppKernel::class;
+        return TestKernel::class;
     }
 
     protected static function createKernel(array $options = []): KernelInterface
     {
-        return parent::createKernel($options);
+        $kernel = parent::createKernel($options);
+        return $kernel;
     }
-
 
     public function testCommandDiffFile(): void
     {
@@ -193,7 +193,7 @@ class PrCoverageCheckerTest extends KernelTestCase
         );
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/Files does not exist: */');
+        $this->expectExceptionMessageMatches('/Files does not exist: */');
         $command = $application->find('check');
         $commandTester = new CommandTester($command);
         $commandTester->execute(
